@@ -35,23 +35,17 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (loading) return; // Don't do anything while loading
 
-    const inAuthGroup =
-      segments[0] === "screens" && segments[1] === "loginScreen";
+    const inAuthGroup = segments.length === 0; // Root path is now the login screen
     const inProtectedGroup = segments[0] === "modules";
     console.log(inAuthGroup, inProtectedGroup, user);
     if (!user && inProtectedGroup) {
       // Unauthenticated user trying to access protected routes
-      router.replace("/screens/loginScreen");
+      router.replace("/");
     } // ...existing code...
     else if (user && inAuthGroup) {
       // Authenticated user trying to access login screen
       const dashboardRoute = getDashboardRoute(user.userType);
       router.replace(dashboardRoute);
-    }
-    // ...existing code...
-    else if (!user && segments.length === 0) {
-      // init screen for unauthenticated users
-      router.replace("/");
     }
   }, [user, segments, loading, router]);
 
